@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
+  <name>aion_vslam</name>
+  <version>0.0.0</version>
+  <description>Project-specific isaac_ros_visual_slam launch for the Aion R6 rover, run inside the Isaac ROS docker container.</description>
+  <maintainer email="dan.strahan08@gmail.com">dstrahan</maintainer>
+  <license>TODO: License declaration</license>
+
+  <exec_depend>isaac_ros_visual_slam</exec_depend>
+  <exec_depend>rclcpp_components</exec_depend>
+
+  <export>
+    <build_type>ament_python</build_type>
+  </export>
+</package>

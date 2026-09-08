@@ -1,0 +1,5 @@
+# Consumed by isaac_ros_common/scripts/{run_dev,build_image_layers,docker_deploy}.sh
+# setup.sh copies this file to isaac_ros_common/scripts/.isaac_ros_common-config
+# Paths below are resolved relative to isaac_ros_common/scripts/, not to this file.
+CONFIG_IMAGE_KEY=ros2_humble.visual_slam_deps.nvblox_deps
+CONFIG_DOCKER_SEARCH_DIRS=(../../aion_vslam/docker/dockerfiles)

@@ -1,0 +1,7 @@
+ARG BASE_IMAGE
+FROM $BASE_IMAGE
+
+# Install Isaac ROS nvblox runtime dependencies
+RUN (apt-get update || true) && apt-get install -y \
+    ros-humble-isaac-ros-nvblox \
+    && rm -rf /var/lib/apt/lists/*

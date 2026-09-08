@@ -1,0 +1,13 @@
+# Python build artifacts
+__pycache__/
+*.py[cod]
+*.egg-info/
+
+# colcon / ament (in case they ever land inside the package)
+build/
+install/
+log/
+
+# editor / OS
+.vscode/
+.DS_Store
