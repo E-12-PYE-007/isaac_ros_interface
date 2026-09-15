@@ -7,7 +7,7 @@ def generate_launch_description():
     """
     Standalone isaac_ros_visual_slam launch for the Aion R6 rig, run inside the
     Isaac ROS docker container. The front Gemini 336 driver runs separately on the
-    host (localisation/launch/front_camera.launch.py in aion-r6-ROS) -- its topics
+    host (localisation/launch/camera.launch.py in aion-r6-ROS) -- its topics
     and TF reach this container over DDS, so no camera node is started here.
 
     base_frame is base_link (robot root); camera_optical_frames are the Gemini 336's
@@ -29,7 +29,7 @@ def generate_launch_description():
             'enable_image_denoising': False,
             'rectified_images': False,
             'enable_imu_fusion': True,
-            'imu_frame': 'front_camera_accel_gyro_optical_frame',
+            'imu_frame': 'camera_accel_gyro_optical_frame',
             'gyro_noise_density': 0.000244,
             'gyro_random_walk': 0.000019393,
             'accel_noise_density': 0.001862,
@@ -37,19 +37,19 @@ def generate_launch_description():
             'calibration_frequency': 200.0,
             'base_frame': 'base_link',
             'camera_optical_frames': [
-                'front_camera_left_ir_optical_frame',
-                'front_camera_right_ir_optical_frame',
+                'camera_left_ir_optical_frame',
+                'camera_right_ir_optical_frame',
             ],
             'enable_slam_visualization': True,
             'enable_landmarks_view': True,
             'enable_observations_view': True,
         }],
         remappings=[
-            ('visual_slam/image_0', '/front_camera/left_ir/image_raw'),
-            ('visual_slam/camera_info_0', '/front_camera/left_ir/camera_info'),
-            ('visual_slam/image_1', '/front_camera/right_ir/image_raw'),
-            ('visual_slam/camera_info_1', '/front_camera/right_ir/camera_info'),
-            ('visual_slam/imu', '/front_camera/gyro_accel/sample'),
+            ('visual_slam/image_0', '/camera/left_ir/image_raw'),
+            ('visual_slam/camera_info_0', '/camera/left_ir/camera_info'),
+            ('visual_slam/image_1', '/camera/right_ir/image_raw'),
+            ('visual_slam/camera_info_1', '/camera/right_ir/camera_info'),
+            ('visual_slam/imu', '/camera/gyro_accel/sample'),
         ],
     )
 

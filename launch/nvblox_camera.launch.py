@@ -10,7 +10,7 @@ from launch_ros.descriptions import ComposableNode
 def generate_launch_description():
     """
     Standalone nvblox launch for the Aion R6 rig, run inside the Isaac ROS
-    docker container alongside isaac_ros_visual_slam_front_camera.launch.py.
+    docker container alongside vslam.launch.py.
 
     There's no NvbloxCamera preset for the Gemini 336 (nvblox_examples_bringup's
     perception/nvblox.launch.py only covers isaac_sim/realsense/zed), so this
@@ -92,10 +92,10 @@ def generate_launch_description():
         ],
 
         remappings=[
-            ('camera_0/depth/image', '/front_camera/depth/image_raw'),
-            ('camera_0/depth/camera_info', '/front_camera/depth/camera_info'),
-            ('camera_0/color/image', '/front_camera/color/image_raw'),
-            ('camera_0/color/camera_info', '/front_camera/color/camera_info'),
+            ('camera_0/depth/image', '/camera/depth/image_raw'),
+            ('camera_0/depth/camera_info', '/camera/depth/camera_info'),
+            ('camera_0/color/image', '/camera/color/image_raw'),
+            ('camera_0/color/camera_info', '/camera/color/camera_info'),
         ],
     )
 
