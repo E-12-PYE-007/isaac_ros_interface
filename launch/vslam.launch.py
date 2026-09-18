@@ -57,8 +57,9 @@ def generate_launch_description():
                 'camera_left_ir_optical_frame',  
                 'camera_right_ir_optical_frame', 
             ],
-            'publish_odom_to_base_tf': False,   # EKF owns odom->base_link
-            'publish_map_to_odom_tf': False,    # TODO Decide who owns this - VSLAM or EKF
+            # TEMP: True to test VSLAM 
+            'publish_odom_to_base_tf': True,   # EKF owns odom->base_link
+            'publish_map_to_odom_tf': True,    # TODO Decide who owns this - VSLAM or EKF
             
             # SLAM
             'enable_localization_n_mapping': True,
