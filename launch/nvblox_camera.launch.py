@@ -60,27 +60,19 @@ def generate_launch_description():
             nvblox_base_config,
             {
                 'use_lidar': False,
-                'voxel_size': 0.05,
-                'integrate_depth_rate_hz': 15.0,
-                'integrate_color_rate_hz': 2.0,
-                'update_mesh_rate_hz': 0.0, # Mesh is cosmetic only - not required
-                'update_esdf_rate_hz': 10.0,
-                'publish_layer_rate_hz': 2.0,
+                'voxel_size': 0.1,
+                'integrate_depth_rate_hz': 5.0,
+                'integrate_color_rate_hz': 0.0,
+                'update_mesh_rate_hz': 0.0,
+                'update_esdf_rate_hz': 5.0,
+                'publish_layer_rate_hz': 5.0,
                 'publish_debug_vis_rate_hz': 0.0,
                 'use_color': True,
-                # Using height_bounds to constrain vertical range only.
-                # For a bounded area (e.g. fenced plot), switch to:
-                #   'static_mapper.workspace_bounds_type': "bounding_box",
-                #   'static_mapper.workspace_bounds_min_corner_x_m': -5.0,
-                #   'static_mapper.workspace_bounds_min_corner_y_m': -5.0,
-                #   'static_mapper.workspace_bounds_max_corner_x_m': 5.0,
-                #   'static_mapper.workspace_bounds_max_corner_y_m': 5.0,
-                #   'dynamic_mapper.workspace_bounds_type': "bounding_box",
-                #   'dynamic_mapper.workspace_bounds_min_corner_x_m': -5.0,
-                #   'dynamic_mapper.workspace_bounds_min_corner_y_m': -5.0,
-                #   'dynamic_mapper.workspace_bounds_max_corner_x_m': 5.0,
-                #   'dynamic_mapper.workspace_bounds_max_corner_y_m': 5.0,
-                # Corners are relative to the odom frame origin (robot start pose).
+
+                'map_clearing_radius_m': 3,
+                'map_clearing_frame_id': 'base_link',
+                'clear_map_outside_radius_rate_hz': 0.5,
+
                 'static_mapper.workspace_bounds_type': "height_bounds",
                 'static_mapper.workspace_bounds_min_height_m': 0.1,
                 'static_mapper.workspace_bounds_max_height_m': 1.0,
