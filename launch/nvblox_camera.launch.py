@@ -1,52 +1,11 @@
 import os
 from ament_index_python.packages import get_package_share_directory
 import launch
-from launch.actions import DeclareLaunchArgument
-from launch.conditions import IfCondition
-from launch.substitutions import LaunchConfiguration
-from launch_ros.actions import ComposableNodeContainer, Node
+from launch_ros.actions import ComposableNodeContainer
 from launch_ros.descriptions import ComposableNode
 
 def generate_launch_description():
-    """
-    Standalone nvblox launch for the Aion R6 rig, run inside the Isaac ROS
-    docker container alongside vslam.launch.py.
-
-    There's no NvbloxCamera preset for the Gemini 336 (nvblox_examples_bringup's
-    perception/nvblox.launch.py only covers isaac_sim/realsense/zed), so this
-    loads nvblox_ros's NvbloxNode directly, the same way the VSLAM launch file
-    hand-rolls its ComposableNode rather than using a canned wrapper.
-
-    Pose comes from TF (use_tf_transforms in nvblox_base.yaml, left at its
-    default of true) rather than a remapped pose topic -- VSLAM already
-    publishes the odom -> base_link chain nvblox looks up per depth frame,
-    matching nvblox_ros's default global_frame ('odom'), so no frame params
-    are overridden here.
-
-    use_lidar is forced off since nvblox_base.yaml defaults it to true and
-    the rig has no lidar.
-    """
-    # For bringup only - declares static tf to remove dependency on pose est.
-    use_static_tf_arg = DeclareLaunchArgument(
-        'use_static_tf',
-        default_value='true',
-        description='Publish a static odom->camera_link TF instead of relying on VSLAM.',
-    )
-
-    static_tf_node = Node(
-        condition=IfCondition(LaunchConfiguration('use_static_tf')),
-        package='tf2_ros',
-        executable='static_transform_publisher',
-        arguments=[
-            '--x', '0', '--y', '0', '--z', '0',
-            '--qx', '0', '--qy', '0', '--qz', '0', '--qw', '1',
-            '--frame-id', 'odom',
-            '--child-frame-id', 'base_link',
-        ],
-        output='screen',
-    )
-
-
+    
     nvblox_base_config = os.path.join(
         get_package_share_directory('nvblox_examples_bringup'),
         'config', 'nvblox', 'nvblox_base.yaml',
@@ -60,6 +19,7 @@ def generate_launch_description():
             nvblox_base_config,
             {
                 'use_lidar': False,
+                'global_frame': 'odom',  # TEMP: testing nvblox without VSLAM; restore 'map'
                 'voxel_size': 0.1,
                 'integrate_depth_rate_hz': 5.0,
                 'integrate_color_rate_hz': 0.0,
@@ -69,17 +29,18 @@ def generate_launch_description():
                 'publish_debug_vis_rate_hz': 0.0,
                 'use_color': True,
 
-                'map_clearing_radius_m': 3,
+                'map_clearing_radius_m': 3.0,
                 'map_clearing_frame_id': 'base_link',
                 'clear_map_outside_radius_rate_hz': 0.5,
 
                 'static_mapper.workspace_bounds_type': "height_bounds",
                 'static_mapper.workspace_bounds_min_height_m': 0.1,
-                'static_mapper.workspace_bounds_max_height_m': 1.0,
+                'static_mapper.workspace_bounds_max_height_m': 0.2,
                 'dynamic_mapper.workspace_bounds_type': "height_bounds",
                 'dynamic_mapper.workspace_bounds_min_height_m': 0.1,
-                'dynamic_mapper.workspace_bounds_max_height_m': 1.0,
+                'dynamic_mapper.workspace_bounds_max_height_m': 0.2,
                 'static_mapper.esdf_slice_height': 0.0,
+                'static_mapper.projective_integrator_max_integration_distance_m': 2.0,
             },
         ],
 
@@ -100,8 +61,4 @@ def generate_launch_description():
         output='screen',
     )
 
-    return launch.LaunchDescription([
-        use_static_tf_arg,
-        static_tf_node,
-        nvblox_launch_container,
-    ])
+    return launch.LaunchDescription([nvblox_launch_container])

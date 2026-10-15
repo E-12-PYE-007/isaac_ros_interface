@@ -12,10 +12,12 @@ def generate_launch_description():
     VIO is enabled. Stereo IR + the Gemini 336's synced accel/gyro
     stream.
 
-    VSLAM publishes no TF: the EKF owns odom->base_link, and map->odom
-    must be computed against the EKF's odom (relay or global EKF), not published by
-    VSLAM. VO output is consumed by the VO relay (twist + measured covariance),
-    stamped in 'vo_odom' so it is never mistaken for the EKF's odom frame.
+    TF ownership: the local EKF owns odom->base_link and the global EKF owns
+    map->odom. VSLAM publishes only map->vo_odom (its SLAM correction on top of
+    its own VO), a separate branch of the tree. The global EKF uses it to
+    transform VSLAM's VO pose (stamped in 'vo_odom') into the loop-closed pose in
+    map. VO pose also feeds the local EKF via the VO relay. 'vo_odom' keeps VO
+    from ever being mistaken for the EKF's odom frame.
 
     SLAM is enabled. Ground constraints (odometry + SLAM) flatten poses onto the
     start plane: valid for flat-floor operation only.
@@ -45,7 +47,7 @@ def generate_launch_description():
             'imu_buffer_size': 50,              # ~250 ms at 200 Hz; stored as uint8
 
             # timing
-            'image_jitter_threshold_ms': 40.0,  # IR at 29.99 Hz (33.3 ms period, max seen 35 ms)
+            'image_jitter_threshold_ms': 75.0,  # IR at 29.99 Hz (33.3 ms period, max seen 35 ms)
             'sync_matching_threshold_ms': 5.0,  
             'override_publishing_stamp': False, 
 
@@ -57,9 +59,8 @@ def generate_launch_description():
                 'camera_left_ir_optical_frame',  
                 'camera_right_ir_optical_frame', 
             ],
-            # TEMP: True to test VSLAM 
-            'publish_odom_to_base_tf': False,   # EKF owns odom->base_link
-            'publish_map_to_odom_tf': False,    # TODO Decide who owns this - VSLAM or EKF
+            'publish_odom_to_base_tf': False,   # local EKF owns odom->base_link
+            'publish_map_to_odom_tf': True,     # publishes map->vo_odom (odom_frame above) for the global EKF
             
             # SLAM
             'enable_localization_n_mapping': True,
@@ -72,9 +73,9 @@ def generate_launch_description():
             'enable_ground_constraint_in_odometry': True,
 
             # Visualisations
-            'enable_slam_visualization': False,
-            'enable_landmarks_view': False,
-            'enable_observations_view': False,
+            'enable_slam_visualization': True,
+            'enable_landmarks_view': True,
+            'enable_observations_view': True,
         }],
         remappings=[
             ('visual_slam/image_0', '/camera/left_ir/image_raw'),

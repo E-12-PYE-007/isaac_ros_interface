@@ -31,3 +31,7 @@ RUN apt-get update && apt-get install -y \
     ros-humble-isaac-ros-nitros-image-type \
     ros-humble-isaac-ros-image-proc \
     && rm -rf /var/lib/apt/lists/*
+
+# Fast DDS discovery server (override with `docker run -e ROS_DISCOVERY_SERVER=...`)
+ENV ROS_DISCOVERY_SERVER=10.43.254.23:11811
+ENV ROS_SUPER_CLIENT=TRUE
